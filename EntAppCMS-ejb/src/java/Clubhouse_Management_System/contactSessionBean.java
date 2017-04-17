@@ -12,7 +12,8 @@ import javax.ejb.Stateless;
  * @author admin
  */
 @Stateless
-public class SessionBean implements SessionBeanRemote {
+public class contactSessionBean implements contactSessionBeanRemote {
+    
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
