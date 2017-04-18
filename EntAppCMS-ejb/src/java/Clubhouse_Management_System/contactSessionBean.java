@@ -10,9 +10,10 @@ import java.sql.PreparedStatement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.naming.Context;
-import javax.naming.InitialContext;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.sql.DataSource;
 
 /**
@@ -22,8 +23,11 @@ import javax.sql.DataSource;
 @Stateless
 public class contactSessionBean implements contactSessionBeanRemote {
 
+    @Resource(name = "cms")
+    private DataSource cms;
+
     @Override
-    public String send(String name, String email, String message) {
+    public void send(String name, String email, String message) {
 
         Connection con = null;
         PreparedStatement ps = null;
@@ -31,9 +35,7 @@ public class contactSessionBean implements contactSessionBeanRemote {
         Date date = new Date();
 
         try {
-            Context ctx = new InitialContext();
-            DataSource ds = (DataSource) ctx.lookup("java:app/jdbc/cms");
-            con = ds.getConnection();
+            con = cms.getConnection();
             ps = con.prepareStatement("insert into contact values(?,?,?,?)");
             ps.setString(1, name);
             ps.setString(2, email);
@@ -43,13 +45,13 @@ public class contactSessionBean implements contactSessionBeanRemote {
 
             if (count > 0) {
                 con.close();
-                return "Have a nice day :)";
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Have a nice day :)", null));
+
             }
         } catch (Exception ex) {
             System.out.println("Login error -->" + ex.getMessage());
-            return "Error, please try again later...";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error, please try again later..." + ex.getMessage(), null));
         }
-        return "Error, please try again later...";
     }
 
     // Add business logic below. (Right-click in editor and choose
