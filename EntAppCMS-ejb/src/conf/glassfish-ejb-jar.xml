@@ -9,5 +9,12 @@
         <jndi-name>java:module/cms</jndi-name>
       </resource-ref>
     </ejb>
+    <ejb>
+      <ejb-name>bookingSessionBean</ejb-name>
+      <resource-ref>
+        <res-ref-name>cms</res-ref-name>
+        <jndi-name>java:module/cms</jndi-name>
+      </resource-ref>
+    </ejb>
   </enterprise-beans>
 </glassfish-ejb-jar>
